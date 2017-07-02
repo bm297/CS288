@@ -1,0 +1,23 @@
+#!/bin/bash
+
+#Run 60x and obtain a new copy every minute
+for (( i=0; i<60; i++ ))
+do
+
+	fname="nyse_$(date +%Y_%m_%d_%H_%M_%S).html"
+
+	#Download the raw file 
+	wget -O $fname "http://online.wsj.com/mdc/public/page/2_3021-activnyse-actives.html" 
+
+	#Tagsoup the file into xhtml
+ 	#java -jar /usr/share/java/tagsoup.jar --files $fname
+
+ 	#Call Python script
+ 	python hw9.py $fname
+
+	#Remove the raw file .html
+	#rm $fname
+
+	#Sleep for 1 minute
+	sleep 1m
+done

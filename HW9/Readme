@@ -1,0 +1,9 @@
+Homework 9 on Web processing
+
+This homework consists of three files: a bash script for downloading, a python program for extracting data using DOM and inserting to mysql database, and a PHP script for presentation using the Apache web server.
+
+    Write a Bash script to download the stock web page every minute for an hour. Make sure you do this between 9:30 am and 4 pm when the values change. Your bash script will call a python program.
+    Fill in the skeleton python code for extracting data.
+    Complete the injection part which injects data into MySql database. You need to install a mysql database server if not already installed and get it up and running. Check mysql.org for tutorials on how to install and use.
+    Write a PHP script to retrieve data from the mysql database and present them on a browser. The tables will be clickable and sortable like the ones I showed in class. You need to install Apache server if not already installed.
+    You may modify the code but try to stay within the framework. 
