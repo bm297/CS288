@@ -1,0 +1,109 @@
+#!/bin/bash
+
+file="index.html"
+
+# Lists and counters initilization
+user_list=();
+views_list=();
+time_List=();
+id_list=();
+title_list=();
+
+user_cnt=0;
+views_cnt=0;
+time_cnt=0;
+id_cnt=0;
+title_cnt=0;
+
+#create files
+echo "">output.csv;
+echo "">title.txt;
+echo "">views.txt;
+echo "">users.txt;
+echo "">id.txt;
+echo "">duration.txt;
+
+
+function grep_views(){
+	grep views index.html | while read line; do
+		x=`expr "$line" : ".*<li>\(.*\) views</li>"`
+		x=${x//,/};
+		echo "$x" >> views.txt;
+	done	
+}
+
+function grep_title(){
+	grep "title=\"\(.*\) aria-describedby" index.html | grep -v \&# | while read line; do
+				#get whatever is in these brackets
+		x=`expr "$line" : ".*title=\(.*\) aria-describedby"`;
+		x=${x//,/};
+		echo "$x" >> title.txt;
+done
+}
+
+function grep_author(){
+		grep -o /"user"/[a-zA-Z0-9]* index.html |cut -d "/" -f3 | while read line; do
+		echo "$line" >> users.txt;
+	done
+}
+
+function grep_id(){
+	 grep -o "\-id\-[0-9]*" index.html | cut -d "-" -f3 | while read line; do
+                echo "$line" >> id.txt;
+        done    
+}
+
+
+function grep_Duration(){
+	grep "\- Duration: \(.*\).</span>" index.html | while read line; do
+		x=`expr "$line" : ".*Duration: \(.*\).</span></h3>"`
+		echo "$x" >> duration.txt;
+	done
+}
+
+
+function main(){
+	grep_title;
+	grep_views;
+	grep_author;
+	grep_id;
+	grep_Duration;
+	count=0;
+	echo "Output is saved";
+
+
+# Populate lists 
+
+while read line; do
+        user_list[$user_cnt]=$line;
+        ((user_cnt++));
+done < users.txt;
+
+while read line; do
+        views_list[$views_cnt]=$line;
+        ((views_cnt++));
+done < views.txt;
+
+while read line; do
+        time_list[$time_cnt]=$line;
+        ((time_cnt++));
+done < duration.txt;
+
+while read line; do
+        id_list[$id_cnt]=$line;
+        ((id_cnt++));
+done < id.txt;
+
+while read line; do
+        title_list[title_cnt]=$line;
+        ((title_cnt++));
+done < title.txt;
+
+# Write to CSV file
+echo "User	Views	Duration	ID	Title" >> output.csv;
+for ((i=0; i<${#user_list[@]}; i++)); do
+        echo "${user_list[$i]},${views_list[$i]},${time_list[$i]},${id_list[$i]},${title_list[$i]}" >> output.csv;
+done
+
+}
+main
